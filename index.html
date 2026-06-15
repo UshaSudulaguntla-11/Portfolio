@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sudulaguntla Usha Chowdary – Portfolio</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--surface:#111118;--card:#16161f;--border:#ffffff12;
+  --accent:#7c6ff7;--accent2:#4ecdc4;--accent3:#ff6b9d;
+  --text:#e8e8f0;--muted:#8888aa;--glow:rgba(124,111,247,0.35);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  cursor:none;overflow-x:hidden;line-height:1.6;
+}
+
+/* CURSOR */
+#cursor{position:fixed;width:10px;height:10px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s,background .15s;mix-blend-mode:screen}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .12s ease,width .15s,height .15s,opacity .15s;opacity:.6}
+body:hover #cursor{opacity:1}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .8s ease,visibility .8s ease}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none}
+.loader-text{font-size:1.5rem;font-weight:700;letter-spacing:.2em;color:var(--accent);animation:pulse-loader 1.2s ease-in-out infinite}
+.loader-bar-wrap{width:200px;height:2px;background:#ffffff15;border-radius:2px;overflow:hidden}
+.loader-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;animation:load-fill 1.8s ease forwards}
+@keyframes load-fill{from{width:0}to{width:100%}}
+@keyframes pulse-loader{0%,100%{opacity:.4}50%{opacity:1}}
+
+/* CANVAS */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:16px 40px;display:flex;justify-content:space-between;align-items:center;background:rgba(10,10,15,.7);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-logo{font-weight:800;font-size:1.1rem;color:var(--accent);letter-spacing:.05em}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
+.nav-links a:hover{color:var(--accent)}
+
+/* HERO */
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:100px 40px 60px}
+.hero-inner{display:grid;grid-template-columns:1fr auto;gap:60px;align-items:center;max-width:1100px;width:100%}
+.hero-tag{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--accent2);margin-bottom:14px;font-weight:600}
+.hero-name{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:900;line-height:1.1;margin-bottom:16px;background:linear-gradient(135deg,#fff 0%,var(--accent) 40%,var(--accent2) 70%,var(--accent3) 100%);background-size:300% 300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 4s ease infinite}
+@keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.hero-sub{font-size:1.05rem;color:var(--muted);margin-bottom:24px;max-width:480px}
+.hero-cgpa{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border:1px solid var(--accent);border-radius:50px;font-size:.9rem;color:var(--accent);font-weight:600;margin-bottom:32px}
+.hero-cgpa span{color:var(--text);font-weight:800;font-size:1.1rem}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:12px 28px;border-radius:8px;font-size:.9rem;font-weight:600;text-decoration:none;transition:all .25s;display:inline-flex;align-items:center;gap:8px;cursor:none}
+.btn-primary{background:var(--accent);color:#fff;border:1px solid var(--accent)}
+.btn-primary:hover{background:#6558e8;transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn-outline:hover{background:var(--accent);color:#fff;transform:translateY(-2px)}
+
+/* 3D AVATAR CARD */
+.avatar-card{width:200px;height:260px;perspective:800px;flex-shrink:0;cursor:none}
+.avatar-card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:float3d 6s ease-in-out infinite}
+@keyframes float3d{0%,100%{transform:rotateY(-12deg) rotateX(6deg) translateY(0)}33%{transform:rotateY(8deg) rotateX(-4deg) translateY(-12px)}66%{transform:rotateY(-6deg) rotateX(8deg) translateY(-6px)}}
+.avatar-face{width:100%;height:100%;background:linear-gradient(145deg,var(--card),var(--surface));border:1px solid var(--border);border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08)}
+.avatar-initials{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:900;color:#fff;position:relative}
+.ripple-ring{position:absolute;border-radius:50%;border:2px solid var(--accent);animation:ripple 2.4s ease-out infinite;opacity:0}
+.ripple-ring:nth-child(1){width:110px;height:110px;animation-delay:0s}
+.ripple-ring:nth-child(2){width:140px;height:140px;animation-delay:.7s}
+.ripple-ring:nth-child(3){width:170px;height:170px;animation-delay:1.4s}
+@keyframes ripple{0%{transform:scale(.85);opacity:.7}100%{transform:scale(1.15);opacity:0}}
+.avatar-name-small{font-size:.75rem;font-weight:700;color:var(--text);letter-spacing:.06em;text-align:center;padding:0 12px}
+.avatar-badge{font-size:.65rem;color:var(--accent2);letter-spacing:.1em;text-transform:uppercase}
+
+/* SECTIONS */
+section{position:relative;z-index:1;padding:90px 40px;max-width:1100px;margin:0 auto}
+.section-label{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:10px}
+.section-title{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;margin-bottom:48px;color:var(--text)}
+.section-title span{color:var(--accent)}
+
+/* REVEAL ANIMATIONS */
+.reveal{opacity:0;transition:opacity .7s ease,transform .7s ease}
+.reveal.from-up{transform:translateY(40px)}
+.reveal.from-left{transform:translateX(-40px)}
+.reveal.from-right{transform:translateX(40px)}
+.reveal.visible{opacity:1;transform:none}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.about-text{font-size:1rem;color:var(--muted);line-height:1.8}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
+.stat-number{font-size:1.8rem;font-weight:900;color:var(--accent);display:block}
+.stat-label{font-size:.75rem;color:var(--muted);margin-top:4px;letter-spacing:.05em}
+
+/* SKILLS */
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
+.skill-group{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+.skill-group-title{font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2);font-weight:700;margin-bottom:18px}
+.skill-item{margin-bottom:16px}
+.skill-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.skill-name{font-size:.9rem;color:var(--text);font-weight:500}
+.skill-pct{font-size:.8rem;color:var(--muted)}
+.skill-track{height:5px;background:#ffffff0f;border-radius:4px;overflow:hidden}
+.skill-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width 1.2s cubic-bezier(.25,.46,.45,.94)}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.project-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;cursor:none}
+.project-card::before{content:'';position:absolute;top:0;left:-100%;right:101%;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2),var(--accent3));transition:left .5s ease,right .5s ease;border-radius:2px 2px 0 0}
+.project-card:hover::before{left:0;right:0}
+.project-card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.project-icon{width:44px;height:44px;border-radius:10px;background:var(--accent)22;border:1px solid var(--accent)44;display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:1.3rem}
+.project-title{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:8px}
+.project-desc{font-size:.875rem;color:var(--muted);line-height:1.7;margin-bottom:16px}
+.project-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:.7rem;padding:3px 10px;border-radius:20px;background:var(--accent)18;color:var(--accent);border:1px solid var(--accent)30;font-weight:500}
+
+/* CERTS */
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.cert-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;display:flex;gap:16px;align-items:flex-start}
+.cert-icon{width:44px;height:44px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:800}
+.cert-title{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.cert-org{font-size:.78rem;color:var(--muted)}
+.cert-score{font-size:.75rem;color:var(--accent2);font-weight:600;margin-top:4px}
+
+/* CONTACT */
+#contact{text-align:center;padding:100px 40px;position:relative;z-index:1}
+.contact-inner{max-width:600px;margin:0 auto;position:relative}
+.contact-pulse{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:-1}
+.contact-pulse-ring{position:absolute;border-radius:50%;border:1px solid var(--accent3);opacity:0;animation:contact-ripple 3s ease-out infinite}
+.contact-pulse-ring:nth-child(1){width:300px;height:300px;top:-150px;left:-150px;animation-delay:0s}
+.contact-pulse-ring:nth-child(2){width:500px;height:500px;top:-250px;left:-250px;animation-delay:.8s}
+.contact-pulse-ring:nth-child(3){width:700px;height:700px;top:-350px;left:-350px;animation-delay:1.6s}
+@keyframes contact-ripple{0%{opacity:.5;transform:scale(.7)}100%{opacity:0;transform:scale(1)}}
+.contact-email{font-size:1.2rem;color:var(--accent);font-weight:600;margin-bottom:32px;display:block}
+.contact-links{display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.contact-link{padding:12px 24px;border-radius:8px;border:1px solid var(--border);color:var(--muted);text-decoration:none;font-size:.85rem;font-weight:500;transition:all .2s;display:flex;align-items:center;gap:8px;cursor:none}
+.contact-link:hover{border-color:var(--accent);color:var(--accent);background:var(--accent)10}
+.contact-location{font-size:.9rem;color:var(--muted);margin-bottom:20px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:28px 40px;text-align:center;font-size:.8rem;color:var(--muted);position:relative;z-index:1}
+
+/* MARQUEE — achievements */
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;position:relative;z-index:1}
+.marquee-track{display:flex;gap:60px;white-space:nowrap;animation:marquee 22s linear infinite}
+.marquee-item{font-size:.8rem;color:var(--muted);font-weight:500;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:10px}
+.marquee-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:14px 20px}
+  .nav-links{gap:16px}
+  .nav-links a{font-size:.75rem}
+  #hero{padding:90px 20px 50px}
+  .hero-inner{grid-template-columns:1fr;text-align:center}
+  .avatar-card{margin:0 auto}
+  .hero-btns{justify-content:center}
+  section{padding:60px 20px}
+  .about-grid{grid-template-columns:1fr}
+  .skills-grid{grid-template-columns:1fr}
+  .projects-grid{grid-template-columns:1fr}
+  #contact{padding:70px 20px}
+}
+
+/* EDUCATION TIMELINE */
+.edu-timeline{display:flex;flex-direction:column;gap:20px}
+.edu-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:28px;display:flex;gap:20px;align-items:flex-start;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.edu-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:3px 0 0 3px}
+.edu-card:hover{transform:translateX(6px);box-shadow:0 16px 48px rgba(0,0,0,.35)}
+.edu-icon{width:48px;height:48px;border-radius:14px;background:var(--accent)20;border:1px solid var(--accent)33;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.edu-body{flex:1}
+.edu-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.edu-degree{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:4px}
+.edu-school{font-size:.875rem;color:var(--muted)}
+.edu-right{text-align:right;flex-shrink:0}
+.edu-year{font-size:.8rem;color:var(--muted);font-style:italic;margin-bottom:4px}
+.edu-score{font-size:1.2rem;font-weight:900;color:var(--accent)}
+.edu-tags{display:flex;flex-wrap:wrap;gap:8px}
+.edu-tag{font-size:.7rem;padding:3px 12px;border-radius:20px;background:var(--accent2)15;color:var(--accent2);border:1px solid var(--accent2)30;font-weight:500}
+@media(max-width:768px){.edu-top{flex-direction:column}.edu-right{text-align:left}}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<div id="loader">
+  <div class="loader-text">USC</div>
+  <div class="loader-bar-wrap"><div class="loader-bar"></div></div>
+</div>
+
+<canvas id="particles"></canvas>
+
+<nav>
+  <div class="nav-logo">Usha S C</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#certifications">Certs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag">Computer Science Undergraduate · AI/ML Developer</div>
+      <h1 class="hero-name">Sudulaguntla<br>Usha Chowdary</h1>
+      <p class="hero-sub">Building intelligent systems at the intersection of Machine Learning, NLP, and Full-Stack Development. Passionate about turning ideas into impactful, real-world applications.</p>
+      <div class="hero-cgpa">🎓 CGPA <span>9.86 / 10.0</span> · Reliance Foundation Scholar</div>
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a href="#contact" class="btn btn-outline">Get in Touch</a>
+      </div>
+    </div>
+    <div class="avatar-card">
+      <div class="avatar-card-inner">
+        <div class="avatar-face">
+          <div class="avatar-initials" style="position:relative">
+            <div class="ripple-ring"></div>
+            <div class="ripple-ring"></div>
+            <div class="ripple-ring"></div>
+            USC
+          </div>
+          <div class="avatar-name-small">Usha Chowdary</div>
+          <div class="avatar-badge">CSE · 2024–28</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track" id="marquee-track"></div>
+</div>
+
+<section id="about" style="max-width:1100px;margin:0 auto">
+  <div class="reveal from-up">
+    <div class="section-label">Who I Am</div>
+    <h2 class="section-title">About <span>Me</span></h2>
+  </div>
+  <div class="about-grid reveal from-up">
+    <div>
+      <p class="about-text">I'm a first-year Computer Science student at Vishnu Institute of Technology, Bhimavaram, with a strong academic record and a relentless drive to build. My interest lies at the intersection of Artificial Intelligence, Machine Learning, and Full-Stack Web Development.</p>
+      <br>
+      <p class="about-text">I learn by doing — every project I build is a chance to apply something new. From deploying deep-learning classifiers to crafting NLP tools for HR automation, I'm always pushing into new territory. I'm currently seeking internship and project opportunities to grow as an AI/ML engineer.</p>
+    </div>
+    <div class="about-stats">
+      <div class="stat-card">
+        <span class="stat-number">9.86</span>
+        <div class="stat-label">CGPA out of 10.0</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">7+</span>
+        <div class="stat-label">Projects Built</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">3</span>
+        <div class="stat-label">Certifications</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">92%</span>
+        <div class="stat-label">NPTEL Python Score</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education" style="max-width:1100px;margin:0 auto">
+  <div class="reveal from-up">
+    <div class="section-label">Academic Background</div>
+    <h2 class="section-title">Education <span>Timeline</span></h2>
+  </div>
+  <div class="edu-timeline">
+
+    <div class="edu-card reveal from-left">
+      <div class="edu-icon">🎓</div>
+      <div class="edu-body">
+        <div class="edu-top">
+          <div>
+            <div class="edu-degree">B.Tech – Computer Science &amp; Engineering</div>
+            <div class="edu-school">Vishnu Institute of Technology, Bhimavaram</div>
+          </div>
+          <div class="edu-right">
+            <div class="edu-year">2024 – 2028</div>
+            <div class="edu-score">CGPA 9.86 / 10.0</div>
+          </div>
+        </div>
+        <div class="edu-tags">
+          <span class="edu-tag">Reliance Foundation Scholar</span>
+          <span class="edu-tag">Top Academic Performer</span>
+          <span class="edu-tag">AI / ML Focus</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="edu-card reveal from-right" style="transition-delay:.1s">
+      <div class="edu-icon">📚</div>
+      <div class="edu-body">
+        <div class="edu-top">
+          <div>
+            <div class="edu-degree">Intermediate (MPC) – Class XII</div>
+            <div class="edu-school">Sri Chaitanya Junior College</div>
+          </div>
+          <div class="edu-right">
+            <div class="edu-year">2022 – 2024</div>
+            <div class="edu-score">98.9%</div>
+          </div>
+        </div>
+        <div class="edu-tags">
+          <span class="edu-tag">Mathematics</span>
+          <span class="edu-tag">Physics</span>
+          <span class="edu-tag">Chemistry</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="edu-card reveal from-left" style="transition-delay:.2s">
+      <div class="edu-icon">🏫</div>
+      <div class="edu-body">
+        <div class="edu-top">
+          <div>
+            <div class="edu-degree">Secondary School – Class X</div>
+            <div class="edu-school">Hindu High School</div>
+          </div>
+          <div class="edu-right">
+            <div class="edu-year">2021 – 2022</div>
+            <div class="edu-score">97.17%</div>
+          </div>
+        </div>
+        <div class="edu-tags">
+          <span class="edu-tag">State Board</span>
+          <span class="edu-tag">Distinction</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="skills" style="max-width:1100px;margin:0 auto">
+  <div class="reveal from-left">
+    <div class="section-label">What I Know</div>
+    <h2 class="section-title">Technical <span>Skills</span></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-group reveal from-left">
+      <div class="skill-group-title">AI / Machine Learning</div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">Python & Scikit-learn</span><span class="skill-pct">92%</span></div><div class="skill-track"><div class="skill-fill" data-w="92"></div></div></div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">TensorFlow / Keras</span><span class="skill-pct">82%</span></div><div class="skill-track"><div class="skill-fill" data-w="82"></div></div></div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">NLP & Generative AI</span><span class="skill-pct">80%</span></div><div class="skill-track"><div class="skill-fill" data-w="80"></div></div></div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">Prompt Engineering / RAG</span><span class="skill-pct">78%</span></div><div class="skill-track"><div class="skill-fill" data-w="78"></div></div></div>
+    </div>
+    <div class="skill-group reveal from-up">
+      <div class="skill-group-title">Web & Backend</div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">HTML5 / CSS3 / JavaScript</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill" data-w="88"></div></div></div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">Flask</span><span class="skill-pct">80%</span></div><div class="skill-track"><div class="skill-fill" data-w="80"></div></div></div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">REST APIs</span><span class="skill-pct">76%</span></div><div class="skill-track"><div class="skill-fill" data-w="76"></div></div></div>
+    </div>
+    <div class="skill-group reveal from-right">
+      <div class="skill-group-title">Data & Languages</div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">Pandas / NumPy</span><span class="skill-pct">85%</span></div><div class="skill-track"><div class="skill-fill" data-w="85"></div></div></div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">SQL / PL-SQL / DBMS</span><span class="skill-pct">80%</span></div><div class="skill-track"><div class="skill-fill" data-w="80"></div></div></div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">Java / C</span><span class="skill-pct">74%</span></div><div class="skill-track"><div class="skill-fill" data-w="74"></div></div></div>
+      <div class="skill-item"><div class="skill-meta"><span class="skill-name">DSA & OOP</span><span class="skill-pct">82%</span></div><div class="skill-track"><div class="skill-fill" data-w="82"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" style="max-width:1100px;margin:0 auto">
+  <div class="reveal from-up">
+    <div class="section-label">What I Built</div>
+    <h2 class="section-title">Featured <span>Projects</span></h2>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card reveal from-up">
+      <div class="project-icon">🧠</div>
+      <div class="project-title">AI Vision Classifier</div>
+      <div class="project-desc">Deep learning image classification web app supporting file uploads and real-time webcam input. Includes confidence scoring, class probabilities, prediction history, and exportable reports.</div>
+      <div class="project-tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">TensorFlow</span><span class="tag">Keras</span><span class="tag">JavaScript</span></div>
+    </div>
+    <div class="project-card reveal from-up" style="transition-delay:.1s">
+      <div class="project-icon">📊</div>
+      <div class="project-title">Student Performance Predictor</div>
+      <div class="project-desc">Linear Regression model trained on student data — attendance, grades, and study hours — selected for its strong fit on the dataset. Deployed via a Flask dashboard for real-time academic performance predictions with risk-level indicators for educators.</div>
+      <div class="project-tags"><span class="tag">Python</span><span class="tag">Linear Regression</span><span class="tag">Scikit-learn</span><span class="tag">Flask</span><span class="tag">Pandas</span><span class="tag">NumPy</span></div>
+    </div>
+    <div class="project-card reveal from-up" style="transition-delay:.2s">
+      <div class="project-icon">🍽️</div>
+      <div class="project-title">Smart Recipe Finder</div>
+      <div class="project-desc">Web app suggesting personalized recipes based on ingredients, with integrated nutrition APIs for real-time calorie tracking and automated meal planning workflow.</div>
+      <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">REST APIs</span></div>
+    </div>
+    <div class="project-card reveal from-up" style="transition-delay:.05s">
+      <div class="project-icon">🎨</div>
+      <div class="project-title">AI Thumbnail Generator</div>
+      <div class="project-desc">Prompt-based AI system for automated, content-relevant thumbnail generation. Optimized prompts for quality, with preview and download features on the frontend.</div>
+      <div class="project-tags"><span class="tag">Python</span><span class="tag">Generative AI</span><span class="tag">Prompt Engineering</span></div>
+    </div>
+    <div class="project-card reveal from-up" style="transition-delay:.15s">
+      <div class="project-icon">🎬</div>
+      <div class="project-title">Movie Recommendation System</div>
+      <div class="project-desc">Collaborative filtering engine using cosine similarity on the MovieLens dataset. Preprocessed data, built similarity matrices, and ranked personalized recommendations.</div>
+      <div class="project-tags"><span class="tag">Python</span><span class="tag">Pandas</span><span class="tag">NumPy</span><span class="tag">Scikit-learn</span></div>
+    </div>
+    <div class="project-card reveal from-up" style="transition-delay:.25s">
+      <div class="project-icon">📄</div>
+      <div class="project-title">ATS Resume Analyzer</div>
+      <div class="project-desc">NLP-powered tool matching resumes with job descriptions using keyword extraction and TF-IDF similarity scoring. Designed to streamline HR automation workflows.</div>
+      <div class="project-tags"><span class="tag">Python</span><span class="tag">NLP</span><span class="tag">TF-IDF</span></div>
+    </div>
+    <div class="project-card reveal from-up" style="transition-delay:.1s">
+      <div class="project-icon">⚛️</div>
+      <div class="project-title">Physics &amp; Chemistry Chatbot</div>
+      <div class="project-desc">AI-powered web chatbot that answers Physics and Chemistry questions exclusively. Queries flow from frontend JavaScript through a Flask backend to the Gemini AI API, responses filtered strictly to science topics. Fast, lightweight, and interactive.</div>
+      <div class="project-tags"><span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Gemini AI</span><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span></div>
+      <div style="margin-top:14px"><a href="https://github.com/UshaSudulaguntla-11/Chatbot-Gen_Ai-" target="_blank" style="font-size:.75rem;color:var(--accent2);text-decoration:none;border:1px solid rgba(78,205,196,.3);padding:4px 12px;border-radius:20px">GitHub →</a></div>
+    </div>
+    <div class="project-card reveal from-up" style="transition-delay:.2s">
+      <div class="project-icon">🏦</div>
+      <div class="project-title">Visionary Banking OS (MiniBank)</div>
+      <div class="project-desc">Full-featured Java desktop banking system with a polished Swing GUI and secure account management. Supports signup/login with PIN, live balance animations, deposit/withdraw/transfer, transaction history with timestamps, and account deletion with confirmation. Data persisted via object serialization.</div>
+      <div class="project-tags"><span class="tag">Java</span><span class="tag">Swing GUI</span><span class="tag">OOP</span><span class="tag">Serialization</span><span class="tag">Event-Driven</span></div>
+      <div style="margin-top:14px"><a href="https://github.com/UshaSudulaguntla-11/MINIBANK" target="_blank" style="font-size:.75rem;color:var(--accent2);text-decoration:none;border:1px solid rgba(78,205,196,.3);padding:4px 12px;border-radius:20px">GitHub →</a></div>
+    </div>
+    <div class="project-card reveal from-up" style="transition-delay:.3s">
+      <div class="project-icon">💰</div>
+      <div class="project-title">FinTrack Pro</div>
+      <div class="project-desc">Personal finance tracker to manage income, expenses, and savings goals. Features intuitive data entry, visual spending breakdowns, and actionable budget insights — clean, responsive interface designed for everyday use.</div>
+      <div class="project-tags"><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Finance</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="certifications" style="max-width:1100px;margin:0 auto">
+  <div class="reveal from-left">
+    <div class="section-label">Credentials</div>
+    <h2 class="section-title">Certifications & <span>Achievements</span></h2>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card reveal from-left">
+      <div class="cert-icon" style="background:#FF9900;color:#fff">☁</div>
+      <div>
+        <div class="cert-title">AWS Academy Graduate</div>
+        <div class="cert-org">Amazon Web Services · EduSkills</div>
+        <div class="cert-score">Cloud Foundations</div>
+      </div>
+    </div>
+    <div class="cert-card reveal from-up">
+      <div class="cert-icon" style="background:#1a73e8;color:#fff">🎓</div>
+      <div>
+        <div class="cert-title">Joy of Computing Using Python</div>
+        <div class="cert-org">NPTEL · IIT Madras</div>
+        <div class="cert-score">Score: 92%</div>
+      </div>
+    </div>
+    <div class="cert-card reveal from-right">
+      <div class="cert-icon" style="background:#7c6ff7;color:#fff">🤖</div>
+      <div>
+        <div class="cert-title">AI, Deep Learning & NLP</div>
+        <div class="cert-org">Springboard</div>
+        <div class="cert-score">Prompt Engineering Specialization</div>
+      </div>
+    </div>
+    <div class="cert-card reveal from-left">
+      <div class="cert-icon" style="background:#4ecdc4;color:#fff">⚡</div>
+      <div>
+        <div class="cert-title">40-Day Generative AI Workshop</div>
+        <div class="cert-org">DataValley</div>
+        <div class="cert-score">Hands-on GenAI Engineering</div>
+      </div>
+    </div>
+    <div class="cert-card reveal from-up">
+      <div class="cert-icon" style="background:#ff6b9d;color:#fff">🏆</div>
+      <div>
+        <div class="cert-title">Reliance Foundation Scholarship</div>
+        <div class="cert-org">Reliance Industries Ltd.</div>
+        <div class="cert-score">Academic Merit Award</div>
+      </div>
+    </div>
+    <div class="cert-card reveal from-right">
+      <div class="cert-icon" style="background:#f5a623;color:#fff">💻</div>
+      <div>
+        <div class="cert-title">DSA Competitive Practice</div>
+        <div class="cert-org">LeetCode · HackerRank</div>
+        <div class="cert-score">Regular Problem Solving</div>
+      </div>
+    </div>
+    <div class="cert-card reveal from-left">
+      <div class="cert-icon" style="background:#FF9900;color:#fff">✨</div>
+      <div>
+        <div class="cert-title">AWS Generative AI</div>
+        <div class="cert-org">Amazon Web Services · AWS Academy</div>
+        <div class="cert-score">Generative AI Foundations</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="max-width:1100px;margin:0 auto;text-align:center;position:relative;z-index:1">
+  <div class="contact-inner reveal from-up">
+    <div class="contact-pulse">
+      <div class="contact-pulse-ring"></div>
+      <div class="contact-pulse-ring"></div>
+      <div class="contact-pulse-ring"></div>
+    </div>
+    <div class="section-label">Let's Connect</div>
+    <h2 class="section-title">Get In <span>Touch</span></h2>
+    <p style="color:var(--muted);max-width:460px;margin:0 auto 28px;font-size:.95rem">Open to internships, research collaborations, and exciting projects in AI/ML and Full-Stack Development.</p>
+    <div class="contact-location">📍 Bhimavaram, Andhra Pradesh · +91 8125056816</div>
+    <a href="mailto:ushasudulaguntla11@gmail.com" class="contact-email">ushasudulaguntla11@gmail.com</a>
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/sudulaguntla-usha-chowdary11072007" target="_blank" class="contact-link">LinkedIn Profile</a>
+      <a href="https://github.com/UshaSudulaguntla-11" target="_blank" class="contact-link">GitHub</a>
+      <a href="https://mail.google.com/mail/?view=cm&to=ushasudulaguntla11@gmail.com" target="_blank" class="contact-link">Send Email</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Sudulaguntla Usha Chowdary · CSE · Vishnu Institute of Technology · 2024–2028</p>
+</footer>
+
+<script>
+// LOADER
+window.addEventListener('load',()=>{
+  setTimeout(()=>{document.getElementById('loader').classList.add('hide')},1900)
+})
+
+// CURSOR
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursor-ring')
+let mx=0,my=0,rx=0,ry=0
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'})
+;(function animRing(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing)})()
+document.querySelectorAll('a,.btn,.project-card,.cert-card,.stat-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.width='54px';ring.style.height='54px'})
+  el.addEventListener('mouseleave',()=>{cur.style.width='10px';cur.style.height='10px';ring.style.width='36px';ring.style.height='36px'})
+})
+
+// PARTICLE NETWORK
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d')
+let W,H,pts=[]
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight}
+resize();window.addEventListener('resize',resize)
+for(let i=0;i<80;i++)pts.push({x:Math.random()*9999,y:Math.random()*9999,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3})
+function drawParticles(){
+  ctx.clearRect(0,0,W,H)
+  pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1})
+  for(let i=0;i<pts.length;i++){
+    const a=pts[i]
+    ctx.beginPath();ctx.arc(a.x,a.y,1.5,0,Math.PI*2)
+    ctx.fillStyle='rgba(124,111,247,.5)';ctx.fill()
+    for(let j=i+1;j<pts.length;j++){
+      const b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y)
+      if(d<130){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y)
+        ctx.strokeStyle=`rgba(124,111,247,${.18*(1-d/130)})`;ctx.lineWidth=.6;ctx.stroke()}
+    }
+  }
+  requestAnimationFrame(drawParticles)
+}
+drawParticles()
+
+// MARQUEE
+const items=['CGPA 9.86 · Top Academic Performer','Reliance Foundation Scholar','AWS Academy · Cloud Foundations','NPTEL Python Score 92%','40-Day GenAI Workshop','7+ Projects Built','Machine Learning · NLP · Gen-AI','Vishnu Institute of Technology']
+const track=document.getElementById('marquee-track')
+const full=[...items,...items].map(t=>`<span class="marquee-item"><span class="marquee-dot"></span>${t}</span>`).join('')
+track.innerHTML=full
+
+// SCROLL REVEAL
+const reveals=document.querySelectorAll('.reveal')
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.12})
+reveals.forEach(r=>io.observe(r))
+
+// SKILL BARS
+const skillObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.skill-fill').forEach(f=>{f.style.width=f.dataset.w+'%'})
+      skillObs.unobserve(e.target)
+    }
+  })
+},{threshold:.3})
+document.querySelectorAll('.skill-group').forEach(g=>skillObs.observe(g))
+</script>
+</body>
+</html>
